@@ -41,8 +41,10 @@
 
     <ImageView
         android:id="@+id/verify__image"
+        android:contentDescription="@string/content_attribute"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:src="@drawable/kyc"/>
 
     <Button
         android:id="@+id/verify__verify"
