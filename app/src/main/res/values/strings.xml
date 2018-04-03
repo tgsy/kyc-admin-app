@@ -1,0 +1,46 @@
+<resources>
+    <string name="app_name">KYC-admin</string>
+
+    <string name="signed_in">Signed In</string>
+    <string name="signed_out">Signed Out</string>
+
+    <string name="log_in">Log In</string>
+    <string name="sign_up">Sign Up</string>
+
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password</string>
+
+    <string name="create_account">Create Account</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="invalid_login">Invalid Username or Password</string>
+
+    <string name="loading">Loading…</string>
+
+    <string name="menu_logout">Log Out</string>
+
+    <string name="title_activity_logged_in">Main Page</string>
+    <string name="tab_verify">Pending Verification</string>
+    <string name="tab_token">Generate Token</string>
+    <string name="tab_all">All Users</string>
+
+    <string name="app_label">blocktrace administration</string>
+    <string name="search_hint">Search Users</string>
+
+    <string name="section_format">Hello World from section: %1$d</string>
+
+    <string name="content_attribute">Content Attribute</string>
+
+    <string name="verify">Verify</string>
+
+
+
+    <string name="message_write_error">Error Writing Message !</string>
+    <string name="message_write_success">Successfully written to Tag !</string>
+    <string name="message_write_progress">Writing to Tag..</string>
+    <string name="message_tag_detected">NFC Tag Detected !</string>
+    <string name="message_read_tag">Read from NFC Tag</string>
+    <string name="message_write_tag">Write to NFC Tag</string>
+    <string name="message_tap_tag">Tap the NFC Tag to your device !</string>
+    <string name="hint_message">Message</string>
+
+</resources>
