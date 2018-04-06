@@ -18,11 +18,11 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
+        android:screenOrientation="portrait"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:screenOrientation="portrait">
-
-        <activity android:name=".MainActivity"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".MainActivity"
             android:noHistory="true"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -34,8 +34,8 @@
         <activity
             android:name=".LoggedInActivity"
             android:label="@string/title_activity_logged_in"
-            android:screenOrientation="portrait"
             android:noHistory="true"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
@@ -46,20 +46,10 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity android:name=".SignUpActivity" />
-        <activity android:name=".VerifyActivity">
-            <intent-filter>
-                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="text/plain" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.nfc.action.TECH_DISCOVERED" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.nfc.action.TECH_DISCOVERED"
-                android:resource="@xml/nfc_tech_filter" />
-        </activity>
+        <activity
+            android:name=".VerifyActivity"
+            android:noHistory="false" />
+        <activity android:name=".WriteTokenActivity"/>
     </application>
 
 </manifest>

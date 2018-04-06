@@ -85,6 +85,24 @@
     <TextView
         android:id="@+id/verifyActivity_postalcode"
         android:text="@string/postal_code"
+        android:autoLink="map"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"/>
+
+    <TextView
+        android:text="@string/email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textAllCaps="true"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/verifyActivity_email"
+        android:textIsSelectable="true"
+        android:autoLink="email"
+        android:text="@string/postal_code"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/activity_vertical_margin"/>
@@ -95,15 +113,23 @@
         android:layout_height="wrap_content"
         android:textColor="@color/black"
         android:textAllCaps="true"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"/>
 
-    <ImageView
-        android:id="@+id/verifyActivity_image"
-        android:contentDescription="@string/content_attribute"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/kyc"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"/>
+        android:layout_marginBottom="@dimen/activity_vertical_margin">
+
+        <com.github.chrisbanes.photoview.PhotoView
+            android:id="@+id/verifyActivity_image"
+            android:contentDescription="@string/content_attribute"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryDark"
+            android:onClick="onClick"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"/>
+    </FrameLayout>
 
     <Button
         android:id="@+id/verifyActivity_verify"
@@ -113,6 +139,5 @@
         android:text="@string/verify"
         android:theme="@style/ThemeOverlay.MyDarkButton"
         android:onClick="onClick"/>
-
     </LinearLayout>
 </ScrollView>

@@ -1,20 +1,16 @@
 package com.example.tessa.kyc_admin;
 
-import android.app.PendingIntent;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.nfc.NfcAdapter;
-import android.nfc.Tag;
-import android.nfc.tech.Ndef;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.github.chrisbanes.photoview.PhotoView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,12 +23,11 @@ import org.json.JSONObject;
 
 import java.io.InputStream;
 
-public class VerifyActivity extends BaseActivity implements Listener {
+public class VerifyActivity extends BaseActivity {
 
     public static final String TAG = VerifyActivity.class.getSimpleName();
 
     private DatabaseReference mDatabase;
-    private StorageReference mStorageRef;
 
     private String imageUrl;
 
@@ -49,14 +44,9 @@ public class VerifyActivity extends BaseActivity implements Listener {
     private TextView id;
     private TextView dob;
     private TextView postal_code;
+    private TextView email;
 
-    private ImageView image;
-
-    private NFCWriteFragment mNfcWriteFragment;
-    private NFCReadFragment mNfcReadFragment;
-
-    private boolean isDialogDisplayed = false;
-    private boolean isWrite = false;
+    private PhotoView image;
 
     private NfcAdapter mNfcAdapter;
 
@@ -70,16 +60,13 @@ public class VerifyActivity extends BaseActivity implements Listener {
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
         mDatabase = FirebaseDatabase.getInstance().getReference().child("users");
-        mStorageRef = FirebaseStorage.getInstance().getReference().child("images").child(UserUid+".jpg");
-
         uid = findViewById(R.id.verifyActivity_uid);
         name = findViewById(R.id.verifyActivity_name);
         id = findViewById(R.id.verifyActivity_id);
         dob = findViewById(R.id.verifyActivity_dob);
         postal_code = findViewById(R.id.verifyActivity_postalcode);
-
+        email = findViewById(R.id.verifyActivity_email);
         image = findViewById(R.id.verifyActivity_image);
-
         getDataFromFirebase(UserUid);
     }
 
@@ -89,7 +76,6 @@ public class VerifyActivity extends BaseActivity implements Listener {
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        //showProgressDialog();
                         User user = dataSnapshot.getValue(User.class);
                         UserEmail = user.getEmail();
                         UserUid = user.getUid();
@@ -98,16 +84,8 @@ public class VerifyActivity extends BaseActivity implements Listener {
                         UserPostalCode = user.getPostal_code();
                         UserDob = user.getDate_of_birth();
                         UserImage = user.getImage();
-                        Log.i("DED ", "User email: "+UserEmail);
-                        Log.i("DED ", "User name: "+UserName);
-                        Log.i("DED ", "User uid: "+UserUid);
-                        Log.i("DED ", "User id: "+UserID);
-                        Log.i("DED ", "User postal: "+UserPostalCode);
-                        Log.i("DED ", "User dob: "+UserDob);
-                        Log.i("DED ", "User image: "+UserImage);
                         updateUI();
-                        //hideProgressDialog();
-                        new imageDownloading().execute(UserImage);
+                        new imageDownload().execute(UserImage);
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) { }
@@ -121,81 +99,17 @@ public class VerifyActivity extends BaseActivity implements Listener {
         id.setText(UserID);
         dob.setText(UserDob);
         postal_code.setText(UserPostalCode);
+        email.setText(UserEmail);
     }
 
     public void onClick(View view) {
-        if (view.getId()==R.id.verifyActivity_verify) {
+        int v = view.getId();
+        if (v==R.id.verifyActivity_verify) {
             new RegisterKYCTask().execute();
-            Intent intent = new Intent(VerifyActivity.this, LoggedInActivity.class);
-            startActivity(intent);
-
-            Toast.makeText(VerifyActivity.this, "Verification Successful", Toast.LENGTH_LONG).show();
-
         }
     }
 
-    public void verifyUser(String Uid) {
-        mDatabase.child(Uid).child("status").setValue(2);
-    }
-
-    @Override
-    public void onDialogDisplayed() {
-        isDialogDisplayed = true;
-
-    }
-
-    @Override
-    public void onDialogDismissed() {
-        isDialogDisplayed = false;
-        isWrite = false;
-
-    }
-
-    @Override
-    protected void onResume() {
-        Log.i("DED","onResume: ");
-        super.onResume();
-        IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
-        IntentFilter ndefDetected = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
-        IntentFilter techDetected = new IntentFilter(NfcAdapter.ACTION_TECH_DISCOVERED);
-        IntentFilter[] nfcIntentFilter = new IntentFilter[]{techDetected,tagDetected,ndefDetected};
-
-        PendingIntent pendingIntent = PendingIntent.getActivity(
-                this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
-        if(mNfcAdapter!= null)
-            mNfcAdapter.enableForegroundDispatch(this, pendingIntent, nfcIntentFilter, null);
-
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-
-        Log.d(TAG, "onNewIntent: "+intent.getAction());
-
-        if(tag != null) {
-            Toast.makeText(this, getString(R.string.message_tag_detected), Toast.LENGTH_SHORT).show();
-            Ndef ndef = Ndef.get(tag);
-
-            if (isDialogDisplayed) {
-
-                if (isWrite) {
-
-                    String messageToWrite = UserUid;
-                    mNfcWriteFragment = (NFCWriteFragment) getFragmentManager().findFragmentByTag(NFCWriteFragment.TAG);
-                    mNfcWriteFragment.onNfcDetected(ndef,messageToWrite);
-                    Log.i("DED","message written: "+messageToWrite);
-                    verifyUser(UserUid);
-
-                } else {
-                    mNfcReadFragment = (NFCReadFragment)getFragmentManager().findFragmentByTag(NFCReadFragment.TAG);
-                    mNfcReadFragment.onNfcDetected(ndef);
-                }
-            }
-        }
-    }
-
-    private class imageDownloading extends AsyncTask<String, Void, Bitmap> { //static??
+    private class imageDownload extends AsyncTask<String, Void, Bitmap> { //static??
 
         @Override
         protected void onPreExecute() {
@@ -212,11 +126,10 @@ public class VerifyActivity extends BaseActivity implements Listener {
             try {
                 InputStream input = new java.net.URL(imageUrl).openStream();
                 bitmap = BitmapFactory.decodeStream(input);
-            }catch (Exception ex){
+            } catch (Exception ex){
                 ex.printStackTrace();
             }
             return bitmap;
-
 
         }
 
@@ -261,13 +174,16 @@ public class VerifyActivity extends BaseActivity implements Listener {
             try {
                 //store the token received in the phone and convert the token into JSONObject
                 token = new JSONObject(result);
-                Log.i("Norman",token.get("merkle_raw").toString());
-                Log.i("Norman","original token");
-                Log.i("Norman",token.toString());
-
                 mDatabase.child(UserUid).child("status").setValue(2);
                 mDatabase.child(UserUid).child("image").setValue("null");
                 mDatabase.child(UserUid).child("postal_code").setValue("null");
+                Toast.makeText(VerifyActivity.this, "Verification Successful", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getParent(), WriteTokenActivity.class);
+                //TODO: add key as extra
+                intent.putExtra("KEY", "blah");
+                startActivity(intent);
+                finish();
+
             } catch (Exception ex){
                 ex.printStackTrace();
             }
