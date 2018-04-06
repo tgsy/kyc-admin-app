@@ -9,8 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -50,14 +48,14 @@ public class TokenFragment extends Fragment {
         adapter = new FirebaseRecyclerAdapter<User, ViewHolder>(options) {
 
             @Override
-            public TokenFragment.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                 View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.recyclerview, parent, false);
                 return new ViewHolder(view);
             }
 
             @Override
-            protected void onBindViewHolder(TokenFragment.ViewHolder holder, int position, User model) {
+            protected void onBindViewHolder(ViewHolder holder, int position, User model) {
                 holder.mNameView.setText(model.getFull_name());
                 holder.mIdView.setText(model.getId());
                 holder.mUidView.setText(model.getUid());
@@ -77,7 +75,7 @@ public class TokenFragment extends Fragment {
             }
         });
 
-        mRecyclerView = view.findViewById(R.id.verify_recyclerview);
+        mRecyclerView = view.findViewById(R.id.token_recyclerview);
 
         //mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -97,30 +95,5 @@ public class TokenFragment extends Fragment {
     public void onStop() {
         super.onStop();
         adapter.stopListening();
-    }
-
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        private final View mView;
-        private final TextView mNameView;
-        private final TextView mIdView;
-        private final ImageView mIconView;
-        private final TextView mUidView;
-        private User mUser;
-
-        public ViewHolder(View view) {
-            super(view);
-            this.mView = view;
-            this.mNameView = (TextView) view.findViewById(R.id.verify_name);
-            this.mIdView = (TextView) view.findViewById(R.id.verify_id);
-            this.mIconView = (ImageView) view.findViewById(R.id.verify_icon);
-            this.mUidView = (TextView) view.findViewById(R.id.verify_Uid);
-
-            itemView.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View view) {
-
-        }
     }
 }

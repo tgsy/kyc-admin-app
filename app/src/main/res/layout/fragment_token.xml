@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/verify_recyclerview"
+    android:id="@+id/token_recyclerview"
     android:name="com.example.tessa.kyc.CompanyFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
-    tools:context="com.example.tessa.kyc_admin.VerifyFragment"
+    tools:context="com.example.tessa.kyc_admin.TokenFragment"
     tools:listitem="@layout/recyclerview" />

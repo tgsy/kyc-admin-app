@@ -58,21 +58,20 @@ public class VerifyFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.i("DED","OnCreateView: ");
         View view = inflater.inflate(R.layout.fragment_verify, container, false);
 
-        adapter = new FirebaseRecyclerAdapter<User, ViewHolder>(options) {
+        adapter = new FirebaseRecyclerAdapter<User, VerifyViewHolder>(options) {
 
             @Override
-            public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            public VerifyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                 View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.recyclerview, parent, false);
-                return new ViewHolder(view);
+                return new VerifyViewHolder(view);
             }
 
+
             @Override
-            protected void onBindViewHolder(ViewHolder holder, int position, User model) {
-                Log.i("DED","test: "+ model.getFull_name());
+            protected void onBindViewHolder(@NonNull VerifyViewHolder holder, int position, @NonNull User model) {
                 holder.mNameView.setText(model.getFull_name());
                 holder.mIdView.setText(model.getId());
                 holder.mUidView.setText(model.getUid());
@@ -105,15 +104,12 @@ public class VerifyFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        //if (isSignedIn()) { attachRecyclerViewAdapter(); }
-        //FirebaseAuth.getInstance().addAuthStateListener(this);
         adapter.startListening();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        //FirebaseAuth.getInstance().removeAuthStateListener(this);
         adapter.stopListening();
     }
 
@@ -121,23 +117,10 @@ public class VerifyFragment extends Fragment {
         return FirebaseAuth.getInstance().getCurrentUser() != null;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private final View mView;
-        private final TextView mNameView;
-        private final TextView mIdView;
-        private final ImageView mIconView;
-        private final TextView mUidView;
-        private User mUser;
+    public class VerifyViewHolder extends ViewHolder {
 
-        public ViewHolder(View view) {
+        public VerifyViewHolder(View view) {
             super(view);
-            this.mView = view;
-            this.mNameView = (TextView) view.findViewById(R.id.verify_name);
-            this.mIdView = (TextView) view.findViewById(R.id.verify_id);
-            this.mIconView = (ImageView) view.findViewById(R.id.verify_icon);
-            this.mUidView = (TextView) view.findViewById(R.id.verify_Uid);
-
-            itemView.setOnClickListener(this);
         }
 
         @Override

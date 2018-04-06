@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">KYC-admin</string>
+    <string name="app_name">blocktrace admin</string>
 
     <string name="signed_in">Signed In</string>
     <string name="signed_out">Signed Out</string>
@@ -32,7 +32,14 @@
 
     <string name="verify">Verify</string>
 
+    <string name="app_shared_userId">com.example.tessa</string>
 
+    <string name="userid">UID</string>
+    <string name="name">Name</string>
+    <string name="id">ID</string>
+    <string name="dob">Date of Birth</string>
+    <string name="postal_code">Postal Code</string>
+    <string name="image">Image</string>
 
     <string name="message_write_error">Error Writing Message !</string>
     <string name="message_write_success">Successfully written to Tag !</string>

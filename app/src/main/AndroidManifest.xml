@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.tessa.kyc_admin">
+    package="com.example.tessa.kyc_admin"
+    android:sharedUserId="@string/app_shared_userId">
 
     <uses-permission android:name="android.permission.NFC" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -34,6 +35,7 @@
             android:name=".LoggedInActivity"
             android:label="@string/title_activity_logged_in"
             android:screenOrientation="portrait"
+            android:noHistory="true"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />

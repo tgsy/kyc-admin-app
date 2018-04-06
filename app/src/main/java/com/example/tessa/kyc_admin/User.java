@@ -3,21 +3,35 @@ package com.example.tessa.kyc_admin;
 public class User {
 
     private String uid;
+    private String email;
     private String full_name;
     private String id;
     private String date_of_birth;
     private String postal_code;
+    private String image;
     private long status;
+    private long token_access;
 
     public User() {}
 
-    public User(String uid, String full_name, String id, String date_of_birth, String postal_code, long status) {
+    public User(String email, String uid, String full_name, String id, String date_of_birth, String postal_code, String image, long status, long token_access) {
+        this.email = email;
         this.uid = uid;
         this.full_name = full_name;
         this.id = id;
         this.date_of_birth = date_of_birth;
         this.postal_code = postal_code;
+        this.image = image;
         this.status = status;
+        this.token_access = token_access;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getUid() {
@@ -65,5 +79,21 @@ public class User {
     }
     public void setStatus(long status) {
         this.status = status;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public long getToken_access() {
+        return token_access;
+    }
+
+    public void setToken_access(long token_access) {
+        this.token_access = token_access;
     }
 }

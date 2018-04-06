@@ -1,53 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:padding="16dp"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
+
+<ScrollView android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center_horizontal"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     tools:context=".VerifyActivity">
 
-    <TextView
-        android:id="@+id/verify__uid"
-        android:text="Uid: "
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:padding="25dp"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/verify__name"
-        android:text="Name: "
+        android:text="@string/userid"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:textAllCaps="true"
+        android:textStyle="bold"/>
+
 
     <TextView
-        android:id="@+id/verify__id"
-        android:text="ID: "
+        android:id="@+id/verifyActivity_uid"
+        android:text="@string/userid"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"/>
 
     <TextView
-        android:id="@+id/verify__dob"
-        android:text="Date of Birth: "
+        android:text="@string/name"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textAllCaps="true"
+        android:textStyle="bold"/>
 
     <TextView
-        android:id="@+id/verify__postalcode"
-        android:text="Postal Code: "
+        android:id="@+id/verifyActivity_name"
+        android:text="@string/name"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"/>
+
+    <TextView
+        android:text="@string/id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textAllCaps="true"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/verifyActivity_id"
+        android:text="@string/id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"/>
+
+    <TextView
+        android:text="@string/dob"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textAllCaps="true"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/verifyActivity_dob"
+        android:text="@string/dob"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"/>
+
+    <TextView
+        android:text="@string/postal_code"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textAllCaps="true"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/verifyActivity_postalcode"
+        android:text="@string/postal_code"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"/>
+
+    <TextView
+        android:text="@string/image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textAllCaps="true"
+        android:textStyle="bold"/>
 
     <ImageView
-        android:id="@+id/verify__image"
+        android:id="@+id/verifyActivity_image"
         android:contentDescription="@string/content_attribute"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/kyc"/>
+        android:src="@drawable/kyc"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"/>
 
     <Button
-        android:id="@+id/verify__verify"
+        android:id="@+id/verifyActivity_verify"
         android:layout_width="match_parent"
         android:layout_gravity="center"
         android:layout_height="wrap_content"
@@ -55,13 +114,5 @@
         android:theme="@style/ThemeOverlay.MyDarkButton"
         android:onClick="onClick"/>
 
-    <Button
-        android:id="@+id/verify__read"
-        android:layout_width="match_parent"
-        android:layout_gravity="center"
-        android:layout_height="wrap_content"
-        android:text="@string/message_read_tag"
-        android:theme="@style/ThemeOverlay.MyDarkButton"
-        android:onClick="onClick"/>
-
-</LinearLayout>
+    </LinearLayout>
+</ScrollView>

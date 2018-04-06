@@ -4,28 +4,28 @@
     android:layout_height="wrap_content" android:layout_margin="16dp">
 
     <TextView
-        android:id="@+id/verify_name"
+        android:id="@+id/recycler_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?attr/textAppearanceListItem"/>
 
 
     <TextView
-        android:id="@+id/verify_id"
-        android:layout_below="@id/verify_name"
+        android:id="@+id/recycler_id"
+        android:layout_below="@id/recycler_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?attr/textAppearanceListItem" />
 
     <TextView
-        android:id="@+id/verify_Uid"
+        android:id="@+id/recycler_Uid"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/verify_id"
+        android:layout_below="@id/recycler_id"
         android:textAppearance="?attr/textAppearanceListItem"/>
 
     <ImageView
-        android:id="@+id/verify_icon"
+        android:id="@+id/recycler_icon"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_alignParentRight="true"
