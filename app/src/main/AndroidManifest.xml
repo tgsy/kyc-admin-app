@@ -46,9 +46,7 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity android:name=".SignUpActivity" />
-        <activity
-            android:name=".VerifyActivity"
-            android:noHistory="false" />
+        <activity android:name=".VerifyActivity" />
         <activity android:name=".WriteTokenActivity"/>
     </application>
 

@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,23 +33,32 @@ public class AllUsersFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Get the intent, verify the action and get the query
-        Intent intent = getActivity().getIntent();
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            //doMySearch(query);
+
+        Bundle b = getArguments();
+        Log.i("TES", "bundlesize: "+b.size());
+
+        if (b.size()!=0) {
+            String search = b.getString("Query");
+            Log.i("TES", "setting query at bsize>0 here");
+            Log.i("TES", "b.getString(): " +search);
+
+            query = FirebaseDatabase.getInstance()
+                    .getReference()
+                    .child("users")
+                    .orderByChild("id")
+                    .startAt(search)
+                    .endAt(search + "\uf8ff")
+                    .limitToLast(50);
+        } else {
+            Log.i("TES", "setting query at bsize=0 here");
+            query = FirebaseDatabase.getInstance()
+                    .getReference()
+                    .child("users")
+                    .limitToLast(50);
         }
-
-
-        query = FirebaseDatabase.getInstance()
-                .getReference()
-                .child("users")
-                .limitToLast(50);
-
         options = new FirebaseRecyclerOptions.Builder<User>()
                 .setQuery(query, User.class)
                 .build();
-
     }
 
     @Override

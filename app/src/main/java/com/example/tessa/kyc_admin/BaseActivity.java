@@ -7,12 +7,14 @@ import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
+import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
 
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -166,4 +168,21 @@ public class BaseActivity extends AppCompatActivity {
         }
         return encrypted_info;
     }
+
+    //save token to internal storage
+    public String saveToken(JSONObject token){
+        String filename = "token.json";
+        try{
+            FileOutputStream fileOutputStream = openFileOutput(filename,MODE_PRIVATE);
+            fileOutputStream.write(token.toString().getBytes());
+            fileOutputStream.close();
+
+            Log.i("Norman",token.toString());
+            return "Saved";
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return "Not Saved";
+    }
+
 }

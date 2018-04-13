@@ -116,20 +116,14 @@
         android:textStyle="bold"
         android:layout_marginBottom="@dimen/activity_vertical_margin"/>
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/activity_vertical_margin">
-
         <com.github.chrisbanes.photoview.PhotoView
             android:id="@+id/verifyActivity_image"
             android:contentDescription="@string/content_attribute"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimaryDark"
-            android:onClick="onClick"
+            android:adjustViewBounds="true"
             android:layout_marginBottom="@dimen/activity_vertical_margin"/>
-    </FrameLayout>
 
     <Button
         android:id="@+id/verifyActivity_verify"

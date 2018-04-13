@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.nfc.NfcAdapter;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -172,15 +173,18 @@ public class VerifyActivity extends BaseActivity {
         protected void onPostExecute(String result) {
             Toast.makeText(VerifyActivity.this, result, Toast.LENGTH_LONG).show();
             try {
+                Log.i("onpostexecute", "token: "+result);
                 //store the token received in the phone and convert the token into JSONObject
                 token = new JSONObject(result);
+                String message = saveToken(token);
+                Log.i("Norman", "token is "+ token.toString());
+                Log.i("Norman", message);
                 mDatabase.child(UserUid).child("status").setValue(2);
                 mDatabase.child(UserUid).child("image").setValue("null");
                 mDatabase.child(UserUid).child("postal_code").setValue("null");
                 Toast.makeText(VerifyActivity.this, "Verification Successful", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getParent(), WriteTokenActivity.class);
-                //TODO: add key as extra
-                intent.putExtra("KEY", "blah");
+                Intent intent = new Intent(getApplicationContext(), WriteTokenActivity.class);
+                intent.putExtra("KEY", token.toString());
                 startActivity(intent);
                 finish();
 
@@ -189,6 +193,12 @@ public class VerifyActivity extends BaseActivity {
             }
         }
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(this, LoggedInActivity.class));
+        finish();
     }
 
 }

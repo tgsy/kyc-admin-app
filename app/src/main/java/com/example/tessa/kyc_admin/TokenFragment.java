@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,12 +28,29 @@ public class TokenFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        query = FirebaseDatabase.getInstance()
-                .getReference()
-                .child("users")
-                .orderByChild("status")
-                .equalTo(1)
-                .limitToLast(50);
+
+        Bundle b = getArguments();
+        Log.i("TES", "bundlesize: "+b.size());
+
+        if (b.size()!=0) {
+            String search = b.getString("Query");
+            Log.i("TES", "setting query at bsize>0 here");
+            Log.i("TES", "b.getString(): " +search);
+
+            query = FirebaseDatabase.getInstance()
+                    .getReference()
+                    .child("users")
+                    .orderByChild("status")
+                    .equalTo(3)
+                    .limitToLast(50);
+        } else {
+            query = FirebaseDatabase.getInstance()
+                    .getReference()
+                    .child("users")
+                    .orderByChild("status")
+                    .equalTo(3)
+                    .limitToLast(50);
+        }
 
         options = new FirebaseRecyclerOptions.Builder<User>()
                 .setQuery(query, User.class)

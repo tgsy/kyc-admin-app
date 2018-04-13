@@ -1,5 +1,6 @@
 package com.example.tessa.kyc_admin;
 
+import android.app.FragmentTransaction;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
@@ -13,6 +14,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,6 +26,8 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.ArrayList;
+
 public class LoggedInActivity extends BaseActivity {
 
 
@@ -32,6 +36,8 @@ public class LoggedInActivity extends BaseActivity {
 
     private ViewPager mViewPager;
 
+    private SearchView mSearchBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,12 +45,12 @@ public class LoggedInActivity extends BaseActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        // Create the adapter that will return a fragment for each of the three
+        // primary sections of the activity.
         mAdapter = new PagerAdapter
                 (getSupportFragmentManager(), tabLayout.getTabCount());
         mViewPager.setAdapter(mAdapter);
@@ -52,9 +58,32 @@ public class LoggedInActivity extends BaseActivity {
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
         //mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         //mViewPager.setAdapter(mSectionsPagerAdapter);
+        mSearchBar = (SearchView) findViewById(R.id.search_bar);
+        // Get the intent, verify the action and get the query
+
+        mSearchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            Bundle bundle = new Bundle();
+
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                bundle.putString("Query", s);
+                mAdapter.setBundle(bundle);
+                mAdapter.notifyDataSetChanged();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                bundle.putString("Query", s);
+                mAdapter.setBundle(bundle);
+                mAdapter.notifyDataSetChanged();
+                Log.i("TES", "tostring:"+bundle.toString());
+                return false;
+            }
+        });
 
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
