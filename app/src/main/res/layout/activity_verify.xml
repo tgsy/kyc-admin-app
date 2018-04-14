@@ -133,5 +133,15 @@
         android:text="@string/verify"
         android:theme="@style/ThemeOverlay.MyDarkButton"
         android:onClick="onClick"/>
+
+    <Button
+        android:id="@+id/verifyActivity_error"
+        android:layout_width="match_parent"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:text="@string/error"
+        android:theme="@style/ThemeOverlay.MyDarkButton"
+        android:onClick="onClick"/>
+
     </LinearLayout>
 </ScrollView>

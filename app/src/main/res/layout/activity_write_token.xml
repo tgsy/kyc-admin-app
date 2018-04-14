@@ -5,7 +5,19 @@
     android:layout_height="match_parent"
     tools:context=".WriteTokenActivity">
 
-    <ImageView
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/scan_nfc_token"
+        android:textAlignment="center"
+        android:textColor="@color/colorAccent"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:padding="15dp"
+        android:layout_above="@+id/writeToken_nfc"
+        android:textAllCaps="true"/>
+
+    <pl.droidsonroids.gif.GifImageView
         android:id="@+id/writeToken_nfc"
         android:layout_width="200dp"
         android:layout_height="200dp"

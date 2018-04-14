@@ -1,11 +1,15 @@
 package com.example.tessa.kyc_admin;
 
+import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.app.SearchManager;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -30,8 +34,6 @@ import java.util.ArrayList;
 
 public class LoggedInActivity extends BaseActivity {
 
-
-    //private SectionsPagerAdapter mSectionsPagerAdapter;
     private PagerAdapter mAdapter;
 
     private ViewPager mViewPager;
@@ -106,5 +108,30 @@ public class LoggedInActivity extends BaseActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(this)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setTitle("Exiting blocktrace")
+                .setMessage("Are you sure you want to log out and exit blocktrace?")
+                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        FirebaseAuth.getInstance().signOut();
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        android.os.Process.killProcess(android.os.Process.myPid());
+                        System.exit(1);
+                    }
+
+                })
+                .setNegativeButton("NO", null)
+                .show();
     }
 }

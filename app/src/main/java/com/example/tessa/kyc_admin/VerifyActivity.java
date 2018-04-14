@@ -3,14 +3,17 @@ package com.example.tessa.kyc_admin;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.nfc.NfcAdapter;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.chrisbanes.photoview.PhotoView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,11 +28,7 @@ import java.io.InputStream;
 
 public class VerifyActivity extends BaseActivity {
 
-    public static final String TAG = VerifyActivity.class.getSimpleName();
-
     private DatabaseReference mDatabase;
-
-    private String imageUrl;
 
     private String UserEmail;
     private String UserUid;
@@ -48,16 +47,11 @@ public class VerifyActivity extends BaseActivity {
 
     private PhotoView image;
 
-    private NfcAdapter mNfcAdapter;
-
-    private JSONObject token;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verify);
         UserUid = getIntent().getStringExtra("Uid");
-        mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
         mDatabase = FirebaseDatabase.getInstance().getReference().child("users");
         uid = findViewById(R.id.verifyActivity_uid);
@@ -105,7 +99,18 @@ public class VerifyActivity extends BaseActivity {
     public void onClick(View view) {
         int v = view.getId();
         if (v==R.id.verifyActivity_verify) {
+            showProgressDialog();
             new RegisterKYCTask().execute();
+        }
+
+        else if (v==R.id.verifyActivity_error) {
+            mDatabase.child(UserUid).child("status").setValue(3);
+            /*Uri uri=Uri.parse("mailto:"+UserEmail+"?subject=blocktrace Registration failed");
+            Intent intent = new Intent(Intent.ACTION_SENDTO, uri);
+            this.startActivity(intent);*/
+            Log.i("DED", "working");
+            startActivity(new Intent(this, LoggedInActivity.class));
+            finish();
         }
     }
 
@@ -119,7 +124,7 @@ public class VerifyActivity extends BaseActivity {
 
         @Override
         protected Bitmap doInBackground(String... URL) {
-            imageUrl = URL[0];
+            String imageUrl = URL[0];
 
             Bitmap bitmap = null;
 
@@ -173,13 +178,13 @@ public class VerifyActivity extends BaseActivity {
             Toast.makeText(VerifyActivity.this, result, Toast.LENGTH_LONG).show();
             try {
                 //store the token received in the phone and convert the token into JSONObject
-                token = new JSONObject(result);
+                //JSONObject token = new JSONObject(result);
                 mDatabase.child(UserUid).child("status").setValue(2);
                 mDatabase.child(UserUid).child("image").setValue("null");
                 mDatabase.child(UserUid).child("postal_code").setValue("null");
+                hideProgressDialog();
                 Toast.makeText(VerifyActivity.this, "Verification Successful", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getParent(), WriteTokenActivity.class);
-                //TODO: add key as extra
+                Intent intent = new Intent(VerifyActivity.this, WriteTokenActivity.class);
                 intent.putExtra("KEY", result);
                 startActivity(intent);
                 finish();
@@ -188,8 +193,12 @@ public class VerifyActivity extends BaseActivity {
                 ex.printStackTrace();
             }
         }
-
     }
 
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(this, LoggedInActivity.class));
+        finish();
+    }
 }
 
