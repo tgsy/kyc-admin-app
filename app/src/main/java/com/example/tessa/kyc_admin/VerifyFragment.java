@@ -31,11 +31,6 @@ public class VerifyFragment extends Fragment {
     FirebaseRecyclerOptions<User> options;
     FirebaseRecyclerAdapter adapter;
     RecyclerView mRecyclerView;
-//    HashMap<String, String> status = new HashMap<>();
-//        status.put("0", "Pending Verification");
-//        status.put("1", "Pending Token Generation");
-//        status.put("2", "Verified Customer");
-//        status.put("3", "Lost Token");
 
     public VerifyFragment() {  }
 
@@ -43,27 +38,12 @@ public class VerifyFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Bundle b = getArguments();
-        Log.i("TES", "bundlesize: "+b.size());
-
-        if (b.size()!=0) {
-            String search = b.getString("Query");
-            Log.i("TES", "setting query at bsize>0 here");
-            Log.i("TES", "b.getString(): " +search);
-
-            query = FirebaseDatabase.getInstance()
-                    .getReference()
-                    .child("users")
-                    .orderByChild("status")
-                    .equalTo(0);
-        } else {
             query = FirebaseDatabase.getInstance()
                     .getReference()
                     .child("users")
                     .orderByChild("status")
                     .equalTo(0)
                     .limitToLast(50);
-        }
 
         options = new FirebaseRecyclerOptions.Builder<User>()
                         .setQuery(query, User.class)

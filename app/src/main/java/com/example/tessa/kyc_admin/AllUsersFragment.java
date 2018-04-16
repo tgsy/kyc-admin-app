@@ -1,7 +1,5 @@
 package com.example.tessa.kyc_admin;
 
-import android.app.SearchManager;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -12,9 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.SearchView;
-import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -34,28 +30,13 @@ public class AllUsersFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Bundle b = getArguments();
-        Log.i("TES", "bundlesize: "+b.size());
+        Log.i("TES", "oncreate");
 
-        if (b.size()!=0) {
-            String search = b.getString("Query");
-            Log.i("TES", "setting query at bsize>0 here");
-            Log.i("TES", "b.getString(): " +search);
+        query = FirebaseDatabase.getInstance()
+                .getReference()
+                .child("users")
+                .limitToLast(50);
 
-            query = FirebaseDatabase.getInstance()
-                    .getReference()
-                    .child("users")
-                    .orderByChild("id")
-                    .startAt(search)
-                    .endAt(search + "\uf8ff")
-                    .limitToLast(50);
-        } else {
-            Log.i("TES", "setting query at bsize=0 here");
-            query = FirebaseDatabase.getInstance()
-                    .getReference()
-                    .child("users")
-                    .limitToLast(50);
-        }
         options = new FirebaseRecyclerOptions.Builder<User>()
                 .setQuery(query, User.class)
                 .build();
@@ -66,6 +47,9 @@ public class AllUsersFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_all_users, container, false);
+        options = new FirebaseRecyclerOptions.Builder<User>()
+                .setQuery(query, User.class)
+                .build();
 
         adapter = new FirebaseRecyclerAdapter<User, ViewHolder>(options) {
 
@@ -84,17 +68,14 @@ public class AllUsersFragment extends Fragment {
                 if (model.getStatus()==0)
                     holder.mIconView.setImageResource(R.drawable.ic_navigate_next_black_24dp);
                 else if (model.getStatus()==2)
-                    holder.mIconView.setImageResource(R.drawable.ic_verified_user_black_24dp);
+                holder.mIconView.setImageResource(R.drawable.ic_verified_user_black_24dp);
+                else if (model.getStatus()==3)
+                    holder.mIconView.setImageResource(R.drawable.pendingicon);
                 else
                     holder.mIconView.setImageResource(R.drawable.ic_report_black_24dp);
             }
-
-            @Override
-            public void onDataChanged() {
-                super.onDataChanged();
-            }
         };
-
+        Log.i("TES", "query:"+query.toString());
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {
@@ -109,6 +90,47 @@ public class AllUsersFragment extends Fragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(adapter);
 
+        SearchView mSearchBar = (SearchView) view.findViewById(R.id.search_bar);
+
+        mSearchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                Log.i("TES", "onquerytextsubmit:"+s);
+                if (s!=null || !s.equalsIgnoreCase("\n")) {
+                    Log.i("TES", "onquerytextsubmit:"+s);
+                    query = FirebaseDatabase.getInstance()
+                            .getReference()
+                            .child("users")
+                            .orderByChild("id")
+                            .startAt(s)
+                            .endAt(s + "\uf8ff")
+                            .limitToLast(50);
+                    mRecyclerView.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+                }
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                Log.i("TES", "onquerytextchange:"+s);
+                if (s!=null || !s.equalsIgnoreCase("\n")) {
+                    Log.i("TES", "onquerytextchange:"+s);
+                    query = FirebaseDatabase.getInstance()
+                            .getReference()
+                            .child("users")
+                            .orderByChild("id")
+                            .startAt(s)
+                            .endAt(s + "\uf8ff")
+                            .limitToLast(50);
+                    mRecyclerView.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+                }
+                return true;
+            }
+        });
+
         return view;
     }
 
@@ -122,5 +144,41 @@ public class AllUsersFragment extends Fragment {
     public void onStop() {
         super.onStop();
         adapter.stopListening();
+    }
+
+    private void setAdapter(Query query) {
+        options = new FirebaseRecyclerOptions.Builder<User>()
+                .setQuery(query, User.class)
+                .build();
+
+        adapter = new FirebaseRecyclerAdapter<User, ViewHolder>(options) {
+
+            @Override
+            public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.recyclerview, parent, false);
+                return new ViewHolder(view);
+            }
+
+            @Override
+            protected void onBindViewHolder(ViewHolder holder, int position, User model) {
+                holder.mNameView.setText(model.getFull_name());
+                holder.mIdView.setText(model.getId());
+                holder.mUidView.setText(model.getUid());
+                if (model.getStatus()==0)
+                    holder.mIconView.setImageResource(R.drawable.ic_navigate_next_black_24dp);
+                else if (model.getStatus()==3)
+                    holder.mIconView.setImageResource(R.drawable.pendingicon);
+                else if (model.getStatus()==2)
+                    holder.mIconView.setImageResource(R.drawable.ic_verified_user_black_24dp);
+                else
+                    holder.mIconView.setImageResource(R.drawable.ic_report_black_24dp);
+            }
+
+            @Override
+            public void onDataChanged() {
+                super.onDataChanged();
+            }
+        };
     }
 }

@@ -25,20 +25,28 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import org.json.JSONObject;
+
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import android.util.Base64;
 
 public class LoggedInActivity extends BaseActivity {
 
     private PagerAdapter mAdapter;
 
     private ViewPager mViewPager;
-
-    private SearchView mSearchBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,33 +66,37 @@ public class LoggedInActivity extends BaseActivity {
         mViewPager.setAdapter(mAdapter);
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
-        //mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        //mViewPager.setAdapter(mSectionsPagerAdapter);
-        mSearchBar = (SearchView) findViewById(R.id.search_bar);
-        // Get the intent, verify the action and get the query
 
-        mSearchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-
-            Bundle bundle = new Bundle();
-
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onQueryTextSubmit(String s) {
-                bundle.putString("Query", s);
-                mAdapter.setBundle(bundle);
-                mAdapter.notifyDataSetChanged();
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
-                bundle.putString("Query", s);
-                mAdapter.setBundle(bundle);
-                mAdapter.notifyDataSetChanged();
-                Log.i("TES", "tostring:"+bundle.toString());
-                return false;
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(LoggedInActivity.this);
+                final EditText input = new EditText(LoggedInActivity.this);
+                builder.setTitle("Re-activate Lost Token");
+                builder.setIcon(R.drawable.ic_autorenew_black_24dp);
+                builder.setMessage(R.string.enter_id_prompt);
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT);
+                lp.setMargins(16, 0, 16, 0);
+                input.setLayoutParams(lp);
+                builder.setView(input);
+                builder.setPositiveButton(R.string.reactivate, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                String userId = input.getText().toString();
+                                reactivateToken(BlocktraceCrypto.hash256(userId));
+                            }
+                        })
+                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
         });
-
     }
 
     @Override
@@ -133,5 +145,46 @@ public class LoggedInActivity extends BaseActivity {
                 })
                 .setNegativeButton("NO", null)
                 .show();
+    }
+
+    private int reactivateToken(String blockId){
+        HttpURLConnection urlConnection = null;
+
+        try {
+            URL url = new URL("https://kyc-project.herokuapp.com/token_found");
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("block_id", blockId);
+
+            //get public key from kyc backend for encryption
+            String str_public_key = Http_Get("https://kyc-project.herokuapp.com/getkey");
+            //convert string public key to public key object and create JSONObject for the content you want to post and encrypt them using the public key
+            byte[] pubKeyByte = BlocktraceCrypto.pemToBytes(str_public_key);
+
+            JSONObject encryptedJSON =  encrypt_json(jsonObject, pubKeyByte);
+
+            urlConnection = (HttpURLConnection) url.openConnection();
+            //set the request method to Post
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setRequestProperty("Content-Type","application/json");
+            String encoded = Base64.encodeToString(("admin"+":"+"secret").getBytes(StandardCharsets.UTF_8), Base64.DEFAULT);  //Java 8
+            urlConnection.setRequestProperty("Authorization", "Basic "+encoded);
+            urlConnection.setDoInput(true);
+            urlConnection.setDoOutput(true);
+            urlConnection.setDoInput(true);
+            urlConnection.setDoOutput(true);
+
+            //output the stream to the server
+            OutputStreamWriter wr = new OutputStreamWriter(urlConnection.
+                    getOutputStream());
+            wr.write(encryptedJSON.toString());
+            wr.flush();
+            int responseCode = urlConnection.getResponseCode();
+            Toast.makeText(getApplicationContext(), "Token Reactivation Successful", Toast.LENGTH_SHORT).show();
+            return responseCode;
+        } catch (Exception ex){
+            Toast.makeText(getApplicationContext(), "Token Reactivation Failed", Toast.LENGTH_SHORT).show();
+            ex.printStackTrace();
+            return 0;
+        }
     }
 }

@@ -1,11 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/allusers_recyclerview"
-    android:name="com.example.tessa.kyc.CompanyFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
-    tools:context="com.example.tessa.kyc_admin.AllUsersFragment"
-    tools:listitem="@layout/recyclerview" />
+    android:orientation="vertical"
+    android:fitsSystemWindows="true"
+    tools:context="com.example.tessa.kyc_admin.VerifyFragment">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/allusers_appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/appbar_padding_top"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <SearchView
+            android:id="@+id/search_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/allusers_recyclerview"
+        android:name="com.example.tessa.kyc.CompanyFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toBottomOf="@+id/allusers_appbar"
+        tools:context="com.example.tessa.kyc_admin.AllUsersFragment"
+        tools:listitem="@layout/recyclerview" />
+
+</LinearLayout>

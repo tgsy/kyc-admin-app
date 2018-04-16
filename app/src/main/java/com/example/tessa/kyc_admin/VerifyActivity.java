@@ -7,12 +7,15 @@ import android.net.Uri;
 import android.nfc.NfcAdapter;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.chrisbanes.photoview.PhotoView;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -47,12 +50,13 @@ public class VerifyActivity extends BaseActivity {
 
     private PhotoView image;
 
+    private static AsyncTask<String, Void, Bitmap> imageDownload;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verify);
         UserUid = getIntent().getStringExtra("Uid");
-
         mDatabase = FirebaseDatabase.getInstance().getReference().child("users");
         uid = findViewById(R.id.verifyActivity_uid);
         name = findViewById(R.id.verifyActivity_name);
@@ -79,7 +83,7 @@ public class VerifyActivity extends BaseActivity {
                         UserDob = user.getDate_of_birth();
                         UserImage = user.getImage();
                         updateUI();
-                        new imageDownload().execute(UserImage);
+                        imageDownload = new imageDownload().execute(UserImage);
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) { }
@@ -109,6 +113,8 @@ public class VerifyActivity extends BaseActivity {
             Intent intent = new Intent(Intent.ACTION_SENDTO, uri);
             this.startActivity(intent);*/
             Log.i("DED", "working");
+
+            imageDownload.cancel(true);
             startActivity(new Intent(this, LoggedInActivity.class));
             finish();
         }
@@ -180,8 +186,24 @@ public class VerifyActivity extends BaseActivity {
                 //store the token received in the phone and convert the token into JSONObject
                 //JSONObject token = new JSONObject(result);
                 mDatabase.child(UserUid).child("status").setValue(2);
-                mDatabase.child(UserUid).child("image").setValue("null");
+                StorageReference imageRef = FirebaseStorage.getInstance().getReferenceFromUrl(UserImage);
+                imageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("TAG", "onSuccess: deleted file");
+                        mDatabase.child(UserUid).child("image").setValue("null");
+                        Toast.makeText(getApplicationContext(), "onSuccess: deleted file", Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getApplicationContext(), "onFailure: deleted file", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                mDatabase.child(UserUid).child("id").setValue("null");
                 mDatabase.child(UserUid).child("postal_code").setValue("null");
+                mDatabase.child(UserUid).child("date_of_birth").setValue("null");
                 hideProgressDialog();
                 Toast.makeText(VerifyActivity.this, "Verification Successful", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(VerifyActivity.this, WriteTokenActivity.class);

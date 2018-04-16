@@ -47,8 +47,10 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
-        <activity android:name=".SignUpActivity" />
-        <activity android:name=".VerifyActivity" />
+        <activity android:name=".SignUpActivity"
+            android:parentActivityName=".MainActivity"/>
+        <activity android:name=".VerifyActivity"
+            android:parentActivityName=".LoggedInActivity"/>
         <activity android:name=".WriteTokenActivity"/>
     </application>
 
