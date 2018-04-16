@@ -20,7 +20,7 @@
 
     <string name="title_activity_logged_in">Main Page</string>
     <string name="tab_verify">Pending Verification</string>
-    <string name="tab_token">Generate Token</string>
+    <string name="tab_update">Awaiting Update</string>
     <string name="tab_all">All Users</string>
 
     <string name="app_label">blocktrace administration</string>
