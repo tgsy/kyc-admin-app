@@ -11,7 +11,6 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
     final TextView mIdView;
     final ImageView mIconView;
     final TextView mUidView;
-    User mUser;
 
     public ViewHolder(View view) {
         super(view);
@@ -20,7 +19,6 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
         this.mIdView = (TextView) view.findViewById(R.id.recycler_id);
         this.mIconView = (ImageView) view.findViewById(R.id.recycler_icon);
         this.mUidView = (TextView) view.findViewById(R.id.recycler_Uid);
-
         itemView.setOnClickListener(this);
     }
 

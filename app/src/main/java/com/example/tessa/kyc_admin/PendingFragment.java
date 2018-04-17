@@ -78,8 +78,6 @@ public class PendingFragment extends Fragment {
         });
 
         mRecyclerView = view.findViewById(R.id.token_recyclerview);
-
-        //mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(adapter);

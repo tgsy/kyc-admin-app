@@ -10,7 +10,6 @@ public class User {
     private String postal_code;
     private String image;
     private long status;
-    private long token_access;
 
     public User() {}
 
@@ -23,7 +22,6 @@ public class User {
         this.postal_code = postal_code;
         this.image = image;
         this.status = status;
-        this.token_access = token_access;
     }
 
     public String getEmail() {
@@ -87,13 +85,5 @@ public class User {
 
     public void setImage(String image) {
         this.image = image;
-    }
-
-    public long getToken_access() {
-        return token_access;
-    }
-
-    public void setToken_access(long token_access) {
-        this.token_access = token_access;
     }
 }

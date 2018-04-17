@@ -32,10 +32,6 @@ import android.util.Base64;
 
 public class LoggedInActivity extends BaseActivity {
 
-    private PagerAdapter mAdapter;
-
-    private ViewPager mViewPager;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,11 +41,9 @@ public class LoggedInActivity extends BaseActivity {
         setSupportActionBar(toolbar);
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
+        ViewPager mViewPager = (ViewPager) findViewById(R.id.container);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
-        mAdapter = new PagerAdapter
+        PagerAdapter mAdapter = new PagerAdapter
                 (getSupportFragmentManager(), tabLayout.getTabCount());
         mViewPager.setAdapter(mAdapter);
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -106,12 +100,7 @@ public class LoggedInActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.menu_logout) {
             signOut();
             return true;

@@ -32,7 +32,6 @@ import java.io.File;
 
 public class MainActivity extends BaseActivity {
 
-    private final String TAG = "DED";
     private FirebaseAuth mAuth;
     private EditText mEmailField;
     private EditText mPasswordField;
@@ -55,17 +54,13 @@ public class MainActivity extends BaseActivity {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        Log.i(TAG, "signed in");
         if (currentUser!=null) updateUI(currentUser);
         else onResume();
     }
 
     private void signIn(String email, String password) {
-        Log.d(TAG, "signIn:" + email);
-        if (!validateForm()) {
+        if (!validateForm())
             return;
-        }
-
 
         showProgressDialog();
 
@@ -75,15 +70,11 @@ public class MainActivity extends BaseActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             updateUI(user);
 
                         } else {
                             // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            /*Toast.makeText(MainActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();*/
                             Snackbar.make(getCurrentFocus(), "Authentication Failed.", Snackbar.LENGTH_LONG)
                                     .setAction("Action", null).show();
                             updateUI(null);
@@ -102,11 +93,9 @@ public class MainActivity extends BaseActivity {
         hideProgressDialog();
         if (user != null) {
             Intent intent = new Intent(this, LoggedInActivity.class);
-            //intent.putExtra("E-mail", user.getEmail());
             startActivity(intent);
-        } else {
-            findViewById(R.id.Profile_Invalid).setVisibility(View.VISIBLE);
-        }
+        } else findViewById(R.id.Profile_Invalid).setVisibility(View.VISIBLE);
+
     }
 
     private boolean validateForm() {
@@ -116,18 +105,14 @@ public class MainActivity extends BaseActivity {
         if (TextUtils.isEmpty(email)) {
             mEmailField.setError("Required.");
             valid = false;
-        } else {
-            mEmailField.setError(null);
-        }
+        } else mEmailField.setError(null);
+
 
         String password = mPasswordField.getText().toString();
         if (TextUtils.isEmpty(password)) {
             mPasswordField.setError("Required.");
             valid = false;
-        } else {
-            mPasswordField.setError(null);
-        }
-
+        } else mPasswordField.setError(null);
         return valid;
     }
 

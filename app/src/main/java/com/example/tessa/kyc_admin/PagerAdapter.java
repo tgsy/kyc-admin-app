@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 public class PagerAdapter extends FragmentStatePagerAdapter {
+
     private int mNumOfTabs;
 
     public PagerAdapter(FragmentManager fm, int NumOfTabs) {
@@ -17,15 +18,9 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
 
         switch (position) {
             case 0:
-                VerifyFragment verifyTab = new VerifyFragment();
-                return verifyTab;
+                return new VerifyFragment();
             case 1:
-                PendingFragment tokenTab = new PendingFragment();
-                return tokenTab;
-            /*case 2:
-                AllUsersFragment allUsersTab = new AllUsersFragment();
-                return allUsersTab;*/
-
+                return new PendingFragment();
             default:
                 return null;
         }

@@ -106,9 +106,8 @@ public class BaseActivity extends AppCompatActivity {
 
                 return message.toString();
             }
-            else {
-                return "False: " + responseCode;
-            }
+            else return "False: " + responseCode;
+
 
         } catch (IOException ex) {
             return "Exception: " + ex.getMessage();
@@ -179,7 +178,7 @@ public class BaseActivity extends AppCompatActivity {
 
             Log.i("Norman",token.toString());
             return "Saved";
-        }catch (Exception e){
+        }catch (Exception e) {
             e.printStackTrace();
         }
         return "Not Saved";

@@ -3,8 +3,6 @@ package com.example.tessa.kyc_admin;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.nfc.NfcAdapter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,7 +14,6 @@ import android.widget.Toast;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -109,11 +106,6 @@ public class VerifyActivity extends BaseActivity {
 
         else if (v==R.id.verifyActivity_error) {
             mDatabase.child(UserUid).child("status").setValue(3);
-            /*Uri uri=Uri.parse("mailto:"+UserEmail+"?subject=blocktrace Registration failed");
-            Intent intent = new Intent(Intent.ACTION_SENDTO, uri);
-            this.startActivity(intent);*/
-            Log.i("DED", "working");
-
             imageDownload.cancel(true);
             startActivity(new Intent(this, LoggedInActivity.class));
             finish();
@@ -194,7 +186,6 @@ public class VerifyActivity extends BaseActivity {
                     imageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            Log.d("TAG", "onSuccess: deleted file");
                             mDatabase.child(UserUid).child("image").setValue("null");
                             Toast.makeText(getApplicationContext(), "onSuccess: deleted file", Toast.LENGTH_SHORT).show();
                         }

@@ -112,11 +112,6 @@ public class VerifyFragment extends Fragment {
         adapter.stopListening();
     }
 
-    private boolean isSignedIn() {
-        return FirebaseAuth.getInstance().getCurrentUser() != null;
-    }
-
-
     public class VerifyViewHolder extends ViewHolder {
 
         public VerifyViewHolder(View view) {

@@ -30,8 +30,6 @@ public class AllUsersFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Log.i("TES", "oncreate");
-
         query = FirebaseDatabase.getInstance()
                 .getReference()
                 .child("users")
@@ -47,12 +45,14 @@ public class AllUsersFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_all_users, container, false);
+
         options = new FirebaseRecyclerOptions.Builder<User>()
                 .setQuery(query, User.class)
                 .build();
 
         adapter = new FirebaseRecyclerAdapter<User, ViewHolder>(options) {
 
+            @NonNull
             @Override
             public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                 View view = LayoutInflater.from(parent.getContext())
@@ -75,7 +75,7 @@ public class AllUsersFragment extends Fragment {
                     holder.mIconView.setImageResource(R.drawable.ic_report_black_24dp);
             }
         };
-        Log.i("TES", "query:"+query.toString());
+
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {
@@ -84,8 +84,6 @@ public class AllUsersFragment extends Fragment {
         });
 
         mRecyclerView = view.findViewById(R.id.allusers_recyclerview);
-
-        //mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(adapter);
@@ -96,9 +94,7 @@ public class AllUsersFragment extends Fragment {
 
             @Override
             public boolean onQueryTextSubmit(String s) {
-                Log.i("TES", "onquerytextsubmit:"+s);
                 if (s!=null || !s.equalsIgnoreCase("\n")) {
-                    Log.i("TES", "onquerytextsubmit:"+s);
                     query = FirebaseDatabase.getInstance()
                             .getReference()
                             .child("users")
