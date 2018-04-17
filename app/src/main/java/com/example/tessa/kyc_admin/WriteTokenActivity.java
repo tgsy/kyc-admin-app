@@ -51,7 +51,7 @@ public class WriteTokenActivity extends AppCompatActivity {
         super.onNewIntent(intent);
 
         if(intent.hasExtra(NfcAdapter.EXTRA_TAG)){
-            Toast.makeText(this,"NfcIntent!", Toast.LENGTH_LONG).show();
+            //Toast.makeText(this,"NfcIntent!", Toast.LENGTH_LONG).show();
 
             Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
            /*
@@ -105,13 +105,13 @@ public class WriteTokenActivity extends AppCompatActivity {
         try {
             NdefFormatable ndefFormatable = NdefFormatable.get(tag);
             if (ndefFormatable == null){
-                Toast.makeText(this, "Tag is not ndef formatable!", Toast.LENGTH_LONG).show();
+                //Toast.makeText(this, "Tag is not ndef formatable!", Toast.LENGTH_LONG).show();
             }
             ndefFormatable.connect();
             ndefFormatable.format(ndefMessage);
             ndefFormatable.close();
 
-            Toast.makeText(this, "Tag written!", Toast.LENGTH_LONG).show();
+            //Toast.makeText(this, "Tag written!", Toast.LENGTH_LONG).show();
         } catch (Exception e) {
            Log.e("formatTag",e.getMessage());
         }
@@ -123,7 +123,7 @@ public class WriteTokenActivity extends AppCompatActivity {
     private void writeNdefMessage(Tag tag, NdefMessage ndefMessage){
         try {
             if (tag == null) {
-                Toast.makeText(this, "Tag object cannot be null", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Error: Tag object cannot be null", Toast.LENGTH_LONG).show();
                 return;
             }
             Ndef ndef = Ndef.get(tag);
@@ -136,14 +136,14 @@ public class WriteTokenActivity extends AppCompatActivity {
                 ndef.connect();
 
                 if (!ndef.isWritable()) {
-                    Toast.makeText(this, "Tag is not writable!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Error: Tag is not writable!", Toast.LENGTH_LONG).show();
                     ndef.close();
                     return;
                 }
 
                 ndef.writeNdefMessage(ndefMessage);
                 ndef.close();
-                Toast.makeText(this, "Tag written", Toast.LENGTH_LONG).show();
+                //Toast.makeText(this, "Tag written", Toast.LENGTH_LONG).show();
 
                 startActivity(new Intent(this, LoggedInActivity.class));
                 Toast.makeText(this, "Token Generation successful", Toast.LENGTH_LONG).show();

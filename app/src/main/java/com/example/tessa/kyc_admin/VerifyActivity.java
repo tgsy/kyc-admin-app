@@ -164,7 +164,7 @@ public class VerifyActivity extends BaseActivity {
                 JSONObject user_info_object = new JSONObject();
                 user_info_object.put("name", UserName);
                 user_info_object.put("postal_code", UserPostalCode);
-                user_info_object.put("id_number", UserID);
+                user_info_object.put("id_number", UserID.toUpperCase());
                 user_info_object.put("dob", UserDob);
 
                 JSONObject encrypted_info = encrypt_json(user_info_object, pubKeyByte);
@@ -182,45 +182,55 @@ public class VerifyActivity extends BaseActivity {
         @Override
         protected void onPostExecute(String result) {
             Toast.makeText(VerifyActivity.this, result, Toast.LENGTH_LONG).show();
-            try {
-                //store the token received in the phone and convert the token into JSONObject
-                //JSONObject token = new JSONObject(result);
-                mDatabase.child(UserUid).child("status").setValue(2);
-                StorageReference imageRef = FirebaseStorage.getInstance().getReferenceFromUrl(UserImage);
-                imageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d("TAG", "onSuccess: deleted file");
-                        mDatabase.child(UserUid).child("image").setValue("null");
-                        Toast.makeText(getApplicationContext(), "onSuccess: deleted file", Toast.LENGTH_SHORT).show();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getApplicationContext(), "onFailure: deleted file", Toast.LENGTH_SHORT).show();
-                    }
-                });
+            hideProgressDialog();
+            if (result.contains("False")) {
+                Toast.makeText(VerifyActivity.this, "Verification failed.", Toast.LENGTH_LONG).show();
+            } else {
+                try {
+                    //store the token received in the phone and convert the token into JSONObject
+                    //JSONObject token = new JSONObject(result);
+                    mDatabase.child(UserUid).child("status").setValue(2);
+                    StorageReference imageRef = FirebaseStorage.getInstance().getReferenceFromUrl(UserImage);
+                    imageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d("TAG", "onSuccess: deleted file");
+                            mDatabase.child(UserUid).child("image").setValue("null");
+                            Toast.makeText(getApplicationContext(), "onSuccess: deleted file", Toast.LENGTH_SHORT).show();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getApplicationContext(), "onFailure: deleted file", Toast.LENGTH_SHORT).show();
+                        }
+                    });
 
-                mDatabase.child(UserUid).child("id").setValue("null");
-                mDatabase.child(UserUid).child("postal_code").setValue("null");
-                mDatabase.child(UserUid).child("date_of_birth").setValue("null");
-                hideProgressDialog();
-                Toast.makeText(VerifyActivity.this, "Verification Successful", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(VerifyActivity.this, WriteTokenActivity.class);
-                intent.putExtra("KEY", result);
-                startActivity(intent);
-                finish();
+                    mDatabase.child(UserUid).child("id").setValue("null");
+                    mDatabase.child(UserUid).child("postal_code").setValue("null");
+                    mDatabase.child(UserUid).child("date_of_birth").setValue("null");
+                    Toast.makeText(VerifyActivity.this, "Verification Successful", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(VerifyActivity.this, WriteTokenActivity.class);
+                    intent.putExtra("KEY", result);
+                    startActivity(intent);
+                    finish();
 
-            } catch (Exception ex){
-                ex.printStackTrace();
+                } catch (Exception ex){
+                    ex.printStackTrace();
+                }
             }
         }
     }
 
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(this, LoggedInActivity.class));
+        startActivity(getParentActivityIntent());
         finish();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }
 
